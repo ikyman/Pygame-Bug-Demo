@@ -9,11 +9,11 @@ HEAD_SIZE = (48, 48)
 ARM_SIZE = (32, 48)
 LEG_SIZE = (32, 48)
 TORSO_SIZE = (48, 64)
-HIPS_SIZE = (48, 32)
+WAIST_SIZE = (48, 32)
 
 
 class SpriteSheet:
-    def __init__(self, folder_name: str) -> None:
+    def __init__(self, folder_name: str, body_part_mapping = dict()) -> None:
         """
         Load and scale all body-part sprites from the given folder.
 
@@ -23,24 +23,25 @@ class SpriteSheet:
         - arm.*
         - leg.*
         - torso.*
-        - hips.*
+        - waist.*
         """
         self.folder_name = folder_name
 
         # Individual body-part surfaces, scaled to their respective sizes.
-        self.hair_back = self._load_and_scale("hair_back", HAIR_BACK_SIZE)
-        self.head = self._load_and_scale("head", HEAD_SIZE)
-        self.arm = self._load_and_scale("arm", ARM_SIZE)
-        self.leg = self._load_and_scale("leg", LEG_SIZE)
-        self.torso = self._load_and_scale("torso", TORSO_SIZE)
-        self.hips = self._load_and_scale("hips", HIPS_SIZE)
+        #self.hair_back = self._load_and_scale("hair_back", HAIR_BACK_SIZE, body_part_mapping)
+        self.head = self._load_and_scale("head", HEAD_SIZE, body_part_mapping)
+        self.arm = self._load_and_scale("arm", ARM_SIZE, body_part_mapping)
+        self.leg = self._load_and_scale("leg", LEG_SIZE, body_part_mapping)
+        self.torso = self._load_and_scale("torso", TORSO_SIZE, body_part_mapping)
+        self.waist = self._load_and_scale("waist", HIPS_SIZE, body_part_mapping)
 
-    def _load_and_scale(self, base_name: str, size: tuple[int, int]) -> pygame.Surface:
+    def _load_and_scale(self, base_name: str, size: tuple[int, int], body_part_mapping) -> pygame.Surface:
         """
         Helper to load an image by base name from the folder and scale it.
 
         Tries common image extensions; raises FileNotFoundError if none found.
         """
+        body_part_name = body_part_mapping.get(base_name, base_name)
         # Try a few common extensions.
         for ext in (".png", ".jpg", ".jpeg", ".bmp"):
             candidate = os.path.join(self.folder_name, base_name + ext)
