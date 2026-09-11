@@ -11,7 +11,7 @@ LEG_SIZE = (32, 48)
 TORSO_SIZE = (48, 64)
 WAIST_SIZE = (48, 32)
 
-
+# Should this be relagated to a "Minimize typing when talking about body parts" Helper class?
 class SpriteSheet:
     def __init__(self, folder_name: str, body_part_mapping = dict()) -> None:
         """
@@ -28,12 +28,12 @@ class SpriteSheet:
         self.folder_name = folder_name
 
         # Individual body-part surfaces, scaled to their respective sizes.
-        #self.hair_back = self._load_and_scale("hair_back", HAIR_BACK_SIZE, body_part_mapping)
+        self.hair_back = self._load_and_scale("hair_back", HAIR_BACK_SIZE, body_part_mapping)
         self.head = self._load_and_scale("head", HEAD_SIZE, body_part_mapping)
         self.arm = self._load_and_scale("arm", ARM_SIZE, body_part_mapping)
         self.leg = self._load_and_scale("leg", LEG_SIZE, body_part_mapping)
         self.torso = self._load_and_scale("torso", TORSO_SIZE, body_part_mapping)
-        self.waist = self._load_and_scale("waist", HIPS_SIZE, body_part_mapping)
+        self.waist = self._load_and_scale("waist", WAIST_SIZE, body_part_mapping)
 
     def _load_and_scale(self, base_name: str, size: tuple[int, int], body_part_mapping) -> pygame.Surface:
         """
@@ -44,9 +44,9 @@ class SpriteSheet:
         body_part_name = body_part_mapping.get(base_name, base_name)
         # Try a few common extensions.
         for ext in (".png", ".jpg", ".jpeg", ".bmp"):
-            candidate = os.path.join(self.folder_name, base_name + ext)
+            candidate = os.path.join(self.folder_name, body_part_name + ext)
             if os.path.isfile(candidate):
                 image = pygame.image.load(candidate).convert_alpha()
                 return pygame.transform.smoothscale(image, size)
 
-        raise FileNotFoundError(f"No image found for '{base_name}' in '{self.folder_name}'")
+        raise FileNotFoundError(f"No image found for '{body_part_name}' in '{self.folder_name}'")
